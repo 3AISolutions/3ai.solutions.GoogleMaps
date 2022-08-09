@@ -28,7 +28,7 @@ namespace _3ai.solutions.GoogleMaps
             return await StaticMapAsync(width, height, $"enc:{path}", token);
         }
 
-        public async Task<byte[]> StaticMapAsync(int width, int height, string path, CancellationToken token = default)
+        private async Task<byte[]> StaticMapAsync(int width, int height, string path, CancellationToken token = default)
         {
             Dictionary<string, string?> query = new()
             {
@@ -108,7 +108,7 @@ namespace _3ai.solutions.GoogleMaps
             if (waypoints?.Count > 0)
                 query.Add("waypoints", string.Join("|", waypoints));
 
-            return QueryHelpers.AddQueryString($"{_baseUrl}/maps/dir", query);
+            return QueryHelpers.AddQueryString($"https://www.google.com/maps/dir/", query);
         }
 
         public string GetEmbededDirectionsUrl(string origin, string destination, List<string>? waypoints = null)
@@ -123,7 +123,7 @@ namespace _3ai.solutions.GoogleMaps
             if (waypoints?.Count > 0)
                 query.Add("waypoints", string.Join("|", waypoints));
 
-            return QueryHelpers.AddQueryString($"{_baseUrl}/maps/embed/v1/directions", query);
+            return QueryHelpers.AddQueryString("https://www.google.com/maps/embed/v1/directions", query);
         }
 
         public async Task<DestinationResponse> GetDirectionsAsync(
