@@ -9,13 +9,11 @@ namespace _3ai.solutions.GoogleMaps
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
-        private readonly string _baseUrl;
 
         public Client(HttpClient httpClient, IOptions<Options> options)
         {
             _httpClient = httpClient;
             _apiKey = options.Value.ApiKey;
-            _baseUrl = options.Value.BaseUrl;
         }
 
         public async Task<byte[]> GetStaticMapAsync(int width, int height, List<string> paths, CancellationToken token = default)
@@ -197,11 +195,11 @@ namespace _3ai.solutions.GoogleMaps
             return await resp.Content.ReadFromJsonAsync<T>(cancellationToken: token);
         }
 
-        private async Task<string> GetStringAsync(string uri, CancellationToken token)
-        {
-            var resp = await _httpClient.GetAsync(uri, token);
-            return await resp.Content.ReadAsStringAsync(token);
-        }
+        //private async Task<string> GetStringAsync(string uri, CancellationToken token)
+        //{
+        //    var resp = await _httpClient.GetAsync(uri, token);
+        //    return await resp.Content.ReadAsStringAsync(token);
+        //}
 
         private async Task<byte[]> GetByteArrayAsync(string uri, CancellationToken token)
         {
