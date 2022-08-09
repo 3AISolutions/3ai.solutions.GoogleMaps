@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Options;
 using _3ai.solutions.GoogleMaps.Models;
 using System.Net.Http.Json;
 
 namespace _3ai.solutions.GoogleMaps
 {
-    public class Client
+    public class GoogleMapsClient
     {
-        private readonly HttpClient _httpClient;
         private readonly string _apiKey;
+        private readonly string _baseUrl;
+        private readonly string _apiUrl;
 
-        public Client(HttpClient httpClient, IOptions<Options> options)
+        public GoogleMapsClient(string apiKey)
         {
-            _httpClient = httpClient;
-            _apiKey = options.Value.ApiKey;
+            _apiKey = apiKey;
+            _baseUrl = "https://www.google.com/";
+            _apiUrl = "https://maps.googleapis.com/";
         }
 
         public async Task<byte[]> GetStaticMapAsync(int width, int height, List<string> paths, CancellationToken token = default)
@@ -35,7 +36,7 @@ namespace _3ai.solutions.GoogleMaps
                 ["key"] = _apiKey
             };
 
-            var uri = QueryHelpers.AddQueryString("maps/api/distancematrix/json", query);
+            var uri = QueryHelpers.AddQueryString($"{_apiUrl}maps/api/distancematrix/json", query);
 
             return await GetByteArrayAsync(uri, token);
         }
@@ -88,7 +89,7 @@ namespace _3ai.solutions.GoogleMaps
             if (region is not null)
                 query.Add("region", region);
 
-            var uri = QueryHelpers.AddQueryString("maps/api/distancematrix/json", query);
+            var uri = QueryHelpers.AddQueryString($"{_apiUrl}maps/api/distancematrix/json", query);
 
             return await GetAsync<string>(uri, token) ?? "";
         }
@@ -106,7 +107,7 @@ namespace _3ai.solutions.GoogleMaps
             if (waypoints?.Count > 0)
                 query.Add("waypoints", string.Join("|", waypoints));
 
-            return QueryHelpers.AddQueryString($"https://www.google.com/maps/dir/", query);
+            return QueryHelpers.AddQueryString($"{_baseUrl}maps/dir/", query);
         }
 
         public string GetEmbededDirectionsUrl(string origin, string destination, List<string>? waypoints = null)
@@ -121,7 +122,7 @@ namespace _3ai.solutions.GoogleMaps
             if (waypoints?.Count > 0)
                 query.Add("waypoints", string.Join("|", waypoints));
 
-            return QueryHelpers.AddQueryString("https://www.google.com/maps/embed/v1/directions", query);
+            return QueryHelpers.AddQueryString($"{_baseUrl}/maps/embed/v1/directions", query);
         }
 
         public async Task<DestinationResponse> GetDirectionsAsync(
@@ -184,14 +185,15 @@ namespace _3ai.solutions.GoogleMaps
             if (region is not null)
                 query.Add("region", region);
 
-            var uri = QueryHelpers.AddQueryString("maps/api/directions/json", query);
+            var uri = QueryHelpers.AddQueryString($"{_apiUrl}/maps/api/directions/json", query);
 
             return await GetAsync<DestinationResponse>(uri, token) ?? new();
         }
 
-        private async Task<T?> GetAsync<T>(string uri, CancellationToken token)
+        private static async Task<T?> GetAsync<T>(string uri, CancellationToken token)
         {
-            var resp = await _httpClient.GetAsync(uri, token);
+            using HttpClient httpClient = new();
+            var resp = await httpClient.GetAsync(uri, token);
             return await resp.Content.ReadFromJsonAsync<T>(cancellationToken: token);
         }
 
@@ -201,9 +203,11 @@ namespace _3ai.solutions.GoogleMaps
         //    return await resp.Content.ReadAsStringAsync(token);
         //}
 
-        private async Task<byte[]> GetByteArrayAsync(string uri, CancellationToken token)
+        private static async Task<byte[]> GetByteArrayAsync(string uri, CancellationToken token)
         {
-            var resp = await _httpClient.GetAsync(uri, token);
+            using HttpClient httpClient = new();
+            //"
+            var resp = await httpClient.GetAsync(uri, token);
             return await resp.Content.ReadAsByteArrayAsync(token);
         }
     }
