@@ -1,16 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net6.0;net8.0</TargetFrameworks>
 		<RootNamespace>_3ai.solutions.GoogleMaps</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>2.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2000-01-01"))).TotalDays).$([System.DateTime]::UtcNow.Hour)</Version>
-		<PackageDescription>.net implementation of Google Maps API, Static, Directions, DistanceMatrix, Embeded Map, and uri for Maps Directions</PackageDescription>
-		<RepositoryUrl>https://github.com/kapiosk/3ai.solutions.GoogleMaps/</RepositoryUrl>
-	</PropertyGroup>
-
-	<PropertyGroup>
+		<Version>
+			8.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2000-01-01"))).TotalDays).$([System.DateTime]::UtcNow.Hour)</Version>
+		<PackageDescription>.net implementation of Google Maps API, Static, Directions,
+			DistanceMatrix, Embeded Map, and uri for Maps Directions</PackageDescription>
+		<RepositoryUrl>https://github.com/3AISolutions/3ai.solutions.GoogleMaps/</RepositoryUrl>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
@@ -18,11 +17,18 @@
 	<ItemGroup>
 		<None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
 		<None Include="README.md" Pack="true" PackagePath="README.md" />
+		<SupportedPlatform Include="browser" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.14" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
 	</ItemGroup>
 
 </Project>
