@@ -190,6 +190,19 @@ namespace _3ai.solutions.GoogleMaps
             return await GetAsync<DestinationResponse>(uri, token) ?? new();
         }
 
+        public async Task<AddressResponse> GetAddressAsync(string address, CancellationToken token = default)
+        {
+            Dictionary<string, string?> query = new()
+            {
+                ["address"] = address,
+                ["key"] = _apiKey
+            };
+
+            var uri = QueryHelpers.AddQueryString($"{_apiUrl}/maps/api/geocode/json", query);
+
+            return await GetAsync<AddressResponse>(uri, token) ?? new();
+        }
+
         private static async Task<T?> GetAsync<T>(string uri, CancellationToken token)
         {
             using HttpClient httpClient = new();
