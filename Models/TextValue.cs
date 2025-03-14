@@ -20,7 +20,7 @@ public record AddressComponent
     public string ShortName { get; set; } = string.Empty;
 
     [JsonPropertyName("types")]
-    public List<string> Types { get; set; } = [];
+    public List<string> Types { get; set; } = new List<string>();
 }
 
 public record Geometry
@@ -77,7 +77,7 @@ public record PlusCode
 public record Result
 {
     [JsonPropertyName("address_components")]
-    public List<AddressComponent> AddressComponents { get; set; } = [];
+    public List<AddressComponent> AddressComponents { get; set; } =  new List<AddressComponent>();
 
     [JsonPropertyName("formatted_address")]
     public string FormattedAddress { get; set; } = string.Empty;
@@ -86,7 +86,7 @@ public record Result
     public Geometry? Geometry { get; set; }
 
     [JsonPropertyName("navigation_points")]
-    public List<NavigationPoint> NavigationPoints { get; set; } = [];
+    public List<NavigationPoint> NavigationPoints { get; set; } = new List<NavigationPoint>();
 
     [JsonPropertyName("place_id")]
     public string PlaceId { get; set; } = string.Empty;
@@ -95,13 +95,13 @@ public record Result
     public PlusCode? PlusCode { get; set; }
 
     [JsonPropertyName("types")]
-    public List<string> Types { get; set; } = [];
+    public List<string> Types { get; set; } = new List<string>();
 }
 
 public record AddressResponse
 {
     [JsonPropertyName("results")]
-    public List<Result> Results { get; set; } = [];
+    public List<Result> Results { get; set; } = new List<Result>();
 
     [JsonPropertyName("status")]
     public string Status { get; set; } = string.Empty;
